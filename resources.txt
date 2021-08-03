@@ -1,2 +1,4 @@
 https://www.youtube.com/watch?v=ciNHn38EyRc
 https://stackoverflow.com/a/38588880
+https://defendtheweb.net/article/blind-sql-injection
+https://lakshmi993.medium.com/blind-sql-injection-mysql-data-base-d2f35afbc451
